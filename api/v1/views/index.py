@@ -17,7 +17,7 @@ classes = {"amenities": Amenity, "cities": City,
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
     """ status view function """
-    return jsonify('{"status": "OK"}')
+    return jsonify({"status": "OK"})
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
