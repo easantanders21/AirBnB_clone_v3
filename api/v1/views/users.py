@@ -74,7 +74,7 @@ def user_put(user_id=None):
     if not request.get_json():
         abort(400, description="Not a JSON")
 
-    ignore = ['id', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at']
 
     for k, v in request.get_json().items():
         if k not in ignore:
