@@ -19,10 +19,11 @@ def status():
     """ status view function """
     return jsonify({"status": "OK"})
 
+
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
     """ status view function """
     dict_classes = {}
     for k, v in classes.items():
-            dict_classes[k] = storage.count(v)
+        dict_classes[k] = storage.count(v)
     return jsonify(dict_classes)
