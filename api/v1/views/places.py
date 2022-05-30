@@ -15,11 +15,9 @@ from flask import jsonify, abort, make_response, request
                  methods=['GET'], strict_slashes=False)
 def all_places(city_id=None):
     """ status view function """
-    city_key = "City.{}".format(city_id)
-    my_objs = storage.all(City)
     place_list = []
     try:
-        my_city = my_objs[city_key]
+        my_city = storage.get(City, city_id)
         my_places = my_city.places
         for place in my_places:
             place_list.append(place.to_dict())
@@ -31,10 +29,8 @@ def all_places(city_id=None):
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def place_id(place_id=None):
     """ status view function """
-    place_key = "Place.{}".format(place_id)
-    my_objs = storage.all(Place)
     try:
-        my_place = my_objs[place_key]
+        my_place = storage.get(Place, place_id)
         return jsonify(my_place.to_dict())
     except Exception:
         abort(404)
@@ -44,10 +40,8 @@ def place_id(place_id=None):
                  strict_slashes=False)
 def place_delete(place_id=None):
     """ status view function """
-    place_key = "Place.{}".format(place_id)
-    my_objs = storage.all(Place)
-    if place_key in my_objs:
-        my_place = my_objs[place_key]
+    my_place = storage.get(Place, place_id)
+    if not my_place:
         storage.delete(my_place)
         storage.save()
         dict_empty = {}
@@ -60,15 +54,13 @@ def place_delete(place_id=None):
                  methods=['POST'], strict_slashes=False)
 def place_post(city_id=None):
     """ status view function """
-    city_key = "City.{}".format(city_id)
-    my_cities = storage.all(City)
-    user_key = "User.{}".format(request.get_json().get('user_id'))
-    my_users = storage.all(User)
+    my_citie = storage.get(City, city_id)
+    my_user = storage.get(User, request.get_json().get('user_id'))
     if not request.get_json():
         abort(400, description="Not a JSON")
-    if city_key not in my_cities:
+    if not my_citie:
         abort(404)
-    if user_key not in my_users:
+    if not my_user:
         abort(404)
     if "user_id" not in request.get_json():
         abort(400, description="Missing user_id")
@@ -83,10 +75,8 @@ def place_post(city_id=None):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def place_put(place_id=None):
     """ status view function """
-    place_key = "Place.{}".format(place_id)
-    my_objs = storage.all(Place)
-    my_obj = my_objs[place_key]
-    if place_key not in my_objs:
+    my_place = storage.get(Place, place_id)
+    if not my_place:
         abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -95,6 +85,6 @@ def place_put(place_id=None):
 
     for k, v in request.get_json().items():
         if k not in ignore:
-            setattr(my_obj, k, v)
-    my_obj.save()
-    return make_response(jsonify(my_obj.to_dict()), 200)
+            setattr(my_place, k, v)
+    my_place.save()
+    return make_response(jsonify(my_place.to_dict()), 200)
