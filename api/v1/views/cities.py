@@ -15,24 +15,22 @@ from flask import jsonify, abort, make_response, request
 def all_cities(state_id=None):
     """ status view function """
     city_list = []
-    try:
-        my_state = storage.get(State, state_id)
-        my_cities = my_state.cities
-        for city in my_cities:
-            city_list.append(city.to_dict())
-        return jsonify(city_list)
-    except Exception:
+    my_state = storage.get(State, state_id)
+    if not my_state:
         abort(404)
+    my_cities = my_state.cities
+    for city in my_cities:
+        city_list.append(city.to_dict())
+    return jsonify(city_list)
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def city_id(city_id=None):
     """ status view function """
-    try:
-        my_city = storage.get(City, city_id)
-        return jsonify(my_city.to_dict())
-    except Exception:
+    my_city = storage.get(City, city_id)
+    if not my_city:
         abort(404)
+    return jsonify(my_city.to_dict())
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'],
