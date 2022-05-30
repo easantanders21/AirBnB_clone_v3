@@ -101,15 +101,6 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(len(models.storage.all()), c)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    # def test_get(self):
-    #     """ test that the get method has the correct output"""
-    #     self.inst = BaseModel(name="Hola")
-    #     self.inst.save()
-    #     base = models.storage.get(BaseModel, inst.id)
-    #     self.assertIs(self.inst, base)
-    #     self.inst2 = State(name="Hola")
-    #     state = models.storage.get(State, inst2.id)
-    #     self.assertEqual(self.inst2, state)
     def test_get_db(self):
         """ Tests method for obtaining an instance db storage"""
         dic = {"name": "Cundinamarca"}
