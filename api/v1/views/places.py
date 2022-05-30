@@ -56,16 +56,16 @@ def place_post(city_id=None):
     """ status view function """
     my_city = storage.get(City, city_id)
     my_user = storage.get(User, request.get_json().get('user_id'))
+    if not my_city:
+        abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
     if "user_id" not in request.get_json():
         abort(400, description="Missing user_id")
-    if "name" not in request.get_json():
-        abort(400, description="Missing name")
-    if not my_city:
-        abort(404)
     if not my_user:
         abort(404)
+    if "name" not in request.get_json():
+        abort(400, description="Missing name")
     new_place = Place(**request.get_json())
     new_place.city_id = city_id
     new_place.save()
