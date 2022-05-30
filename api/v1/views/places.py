@@ -41,7 +41,7 @@ def place_id(place_id=None):
 def place_delete(place_id=None):
     """ status view function """
     my_place = storage.get(Place, place_id)
-    if not my_place:
+    if my_place:
         storage.delete(my_place)
         storage.save()
         dict_empty = {}
@@ -54,11 +54,11 @@ def place_delete(place_id=None):
                  methods=['POST'], strict_slashes=False)
 def place_post(city_id=None):
     """ status view function """
-    my_citie = storage.get(City, city_id)
+    my_city = storage.get(City, city_id)
     my_user = storage.get(User, request.get_json().get('user_id'))
     if not request.get_json():
         abort(400, description="Not a JSON")
-    if not my_citie:
+    if not my_city:
         abort(404)
     if not my_user:
         abort(404)
