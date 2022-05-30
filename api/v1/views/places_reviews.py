@@ -55,19 +55,20 @@ def review_delete(review_id=None):
 def review_post(place_id=None):
     """ status view function """
     my_places = storage.get(Place, place_id)
-    my_users = storage.get(User, request.get_json().get('user_id'))
-    if not request.get_json():
-        abort(400, description="Not a JSON")
     if not my_places:
         abort(404)
-    if not my_users:
-        abort(404)
+    if not request.get_json():
+        abort(400, description="Not a JSON")
     if "user_id" not in request.get_json():
         abort(400, description="Missing user_id")
+    my_users = storage.get(User, request.get_json().get('user_id'))
+    if not my_users:
+        abort(404)
     if "text" not in request.get_json():
         abort(400, description="Missing text")
-    new_review = Review(**request.get_json())
-    new_review.place_id = place_id
+    body_obj = request.get_json()
+    body_obj["place_id"] = place_id
+    new_review = Review(**body_obj)
     new_review.save()
     return make_response(jsonify(new_review.to_dict()), 201)
 
