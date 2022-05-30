@@ -105,7 +105,7 @@ class TestFileStorage(unittest.TestCase):
         """ test that the get method has the correct output"""
         self.inst = BaseModel(name="Hola")
         self.inst.save()
-        base = models.storage.get("Hola", inst.id)
+        base = models.storage.get(BaseModel, inst.id)
         self.assertIs(self.inst, base)
         self.inst2 = State(name="Hola")
         state = models.storage.get(State, inst2.id)
