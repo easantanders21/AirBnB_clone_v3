@@ -23,10 +23,8 @@ def all_users():
                  methods=['GET'], strict_slashes=False)
 def user_id(user_id=None):
     """ status view function """
-    user_key = "User.{}".format(user_id)
-    my_users = storage.all(User)
     try:
-        my_user = my_users[user_key]
+        my_user = storage.get(User, user_id)
         return jsonify(my_user.to_dict())
     except Exception:
         abort(404)
@@ -36,10 +34,8 @@ def user_id(user_id=None):
                  strict_slashes=False)
 def user_delete(user_id=None):
     """ status view function """
-    user_key = "User.{}".format(user_id)
-    my_users = storage.all(User)
-    if user_key in my_users:
-        my_user = my_users[user_key]
+    my_user = storage.get(User, user_id)
+    if my_user:
         storage.delete(my_user)
         storage.save()
         dict_empty = {}
@@ -66,10 +62,8 @@ def user_post():
                  methods=['PUT'], strict_slashes=False)
 def user_put(user_id=None):
     """ status view function """
-    user_key = "User.{}".format(user_id)
-    my_objs = storage.all(User)
-    my_obj = my_objs[user_key]
-    if user_key not in my_objs:
+    my_user = storage.get(User, user_id)
+    if not my_user:
         abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -78,6 +72,6 @@ def user_put(user_id=None):
 
     for k, v in request.get_json().items():
         if k not in ignore:
-            setattr(my_obj, k, v)
-    my_obj.save()
-    return make_response(jsonify(my_obj.to_dict()), 200)
+            setattr(my_user, k, v)
+    my_user.save()
+    return make_response(jsonify(my_user.to_dict()), 200)

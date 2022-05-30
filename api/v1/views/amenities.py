@@ -23,10 +23,8 @@ def all_amenities():
                  methods=['GET'], strict_slashes=False)
 def amenity_id(amenity_id=None):
     """ status view function """
-    amenity_key = "Amenity.{}".format(amenity_id)
-    my_amenities = storage.all(Amenity)
     try:
-        my_amenity = my_amenities[amenity_key]
+        my_amenity = storage.get(Amenity, amenity_id)
         return jsonify(my_amenity.to_dict())
     except Exception:
         abort(404)
@@ -36,10 +34,8 @@ def amenity_id(amenity_id=None):
                  strict_slashes=False)
 def amenity_delete(amenity_id=None):
     """ status view function """
-    amenity_key = "Amenity.{}".format(amenity_id)
-    my_amenities = storage.all(Amenity)
-    if amenity_key in my_amenities:
-        my_amenity = my_amenities[amenity_key]
+    my_amenity = storage.get(Amenity, amenity_id)
+    if my_amenity:
         storage.delete(my_amenity)
         storage.save()
         dict_empty = {}
@@ -64,10 +60,8 @@ def amenity_post():
                  methods=['PUT'], strict_slashes=False)
 def amenity_put(amenity_id=None):
     """ status view function """
-    amenity_key = "Amenity.{}".format(amenity_id)
-    my_objs = storage.all(Amenity)
-    my_obj = my_objs[amenity_key]
-    if amenity_key not in my_objs:
+    my_amenity = storage.get(Amenity, amenity_id)
+    if not my_amenity:
         abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -76,6 +70,6 @@ def amenity_put(amenity_id=None):
 
     for k, v in request.get_json().items():
         if k not in ignore:
-            setattr(my_obj, k, v)
-    my_obj.save()
-    return make_response(jsonify(my_obj.to_dict()), 200)
+            setattr(my_amenity, k, v)
+    my_amenity.save()
+    return make_response(jsonify(my_amenity.to_dict()), 200)

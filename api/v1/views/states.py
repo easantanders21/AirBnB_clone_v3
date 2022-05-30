@@ -22,10 +22,7 @@ def states():
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def state_id(state_id=None):
     """ status view function """
-    # state_key = "State.{}".format(state_id)
-    # my_objs = storage.all(State)
     try:
-        # my_state = my_objs[state_key]
         my_state = storage.get(State, state_id)
         return jsonify(my_state.to_dict())
     except Exception:
@@ -36,8 +33,6 @@ def state_id(state_id=None):
                  strict_slashes=False)
 def state_delete(state_id=None):
     """ status view function """
-    # state_key = "State.{}".format(state_id)
-    # my_objs = storage.all(State)
     my_state = storage.get(State, state_id)
     if my_state:
         storage.delete(my_state)
@@ -63,9 +58,6 @@ def state_post():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def state_put(state_id=None):
     """ status view function """
-    # state_key = "State.{}".format(state_id)
-    # my_objs = storage.all(State)
-    # my_obj = my_objs[state_key]
     my_state = storage.get(State, state_id)
     if not my_state:
         abort(404)
