@@ -55,9 +55,9 @@ def city_post(state_id=None):
         abort(400, description="Not a JSON")
     if "name" not in request.get_json():
         abort(400, description="Missing name")
-    new_city = City()
-    new_city.state_id = state_id
-    new_city.name = request.get_json().get('name')
+    body_obj = request.get_json()
+    body_obj["state_id"] = state_id
+    new_city = City(**body_obj)
     new_city.save()
     return make_response(jsonify(new_city.to_dict()), 201)
 
