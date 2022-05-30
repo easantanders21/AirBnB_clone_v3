@@ -22,10 +22,11 @@ def states():
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def state_id(state_id=None):
     """ status view function """
-    state_key = "State.{}".format(state_id)
-    my_objs = storage.all(State)
+    # state_key = "State.{}".format(state_id)
+    # my_objs = storage.all(State)
     try:
-        my_state = my_objs[state_key]
+        # my_state = my_objs[state_key]
+        my_state = storage.get(State, state_id)
         return jsonify(my_state.to_dict())
     except Exception:
         abort(404)
@@ -35,10 +36,10 @@ def state_id(state_id=None):
                  strict_slashes=False)
 def state_delete(state_id=None):
     """ status view function """
-    state_key = "State.{}".format(state_id)
-    my_objs = storage.all(State)
-    if state_key in my_objs:
-        my_state = my_objs[state_key]
+    # state_key = "State.{}".format(state_id)
+    # my_objs = storage.all(State)
+    my_state = storage.get(State, state_id)
+    if my_state:
         storage.delete(my_state)
         storage.save()
         dict_empty = {}
@@ -62,10 +63,11 @@ def state_post():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def state_put(state_id=None):
     """ status view function """
-    state_key = "State.{}".format(state_id)
-    my_objs = storage.all(State)
-    my_obj = my_objs[state_key]
-    if state_key not in my_objs:
+    # state_key = "State.{}".format(state_id)
+    # my_objs = storage.all(State)
+    # my_obj = my_objs[state_key]
+    my_state = storage.get(State, state_id)
+    if not my_state:
         abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
@@ -74,6 +76,6 @@ def state_put(state_id=None):
 
     for k, v in request.get_json().items():
         if k not in ignore:
-            setattr(my_obj, k, v)
-    my_obj.save()
-    return make_response(jsonify(my_obj.to_dict()), 200)
+            setattr(my_state, k, v)
+    my_state.save()
+    return make_response(jsonify(my_state.to_dict()), 200)
