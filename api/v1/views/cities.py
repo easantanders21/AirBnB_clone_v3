@@ -51,6 +51,9 @@ def city_delete(city_id=None):
                  methods=['POST'], strict_slashes=False)
 def city_post(state_id=None):
     """ status view function """
+    my_state = storage.get(State, state_id)
+    if not my_state:
+        abort(404)
     if not request.get_json():
         abort(400, description="Not a JSON")
     if "name" not in request.get_json():
