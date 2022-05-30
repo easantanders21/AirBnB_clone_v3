@@ -9,8 +9,11 @@ from models.user import User
 from models.base_model import BaseModel
 from api.v1.views import app_views
 from models import storage
-from models import storage_t
 from flask import jsonify, abort, make_response, request
+from os import getenv
+
+
+storage_t = getenv("HBNB_TYPE_STORAGE")
 
 
 @app_views.route('/places/<place_id>/amenities',
@@ -21,7 +24,7 @@ def all_amenities_of_a_place(place_id=None):
     my_place = storage.get(Place, place_id)
     if not my_place:
         abort(404)
-    if models.storage_t == 'db':
+    if storage_t == 'db':
         for amenity in my_place.amenities:
             amenities_list.append(amenity.to_dict())
         return jsonify(amenities_list)
@@ -42,7 +45,7 @@ def delete_amenity_to_a_place(place_id=None, amenity_id=None):
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
         abort(404)
-    if models.storage_t == 'db':
+    if storage_t == 'db':
         if my_amenity not in my_place.amenities:
             abort(404)
         storage.delete(my_amenity)
@@ -66,7 +69,7 @@ def amenity_post_to_a_place(place_id=None, amenity_id=None):
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
         abort(404)
-    if models.storage_t == 'db':
+    if storage_t == 'db':
         if my_amenity in my_place.amenities:
             return make_response(jsonify(my_amenity.to_dict()), 200)
         else:
