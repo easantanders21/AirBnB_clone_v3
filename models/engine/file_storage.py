@@ -71,12 +71,18 @@ class FileStorage:
 
     def get(self, cls, id):
         """ get some objects """
-        try:
-            obj_dict = self.all(cls)
-            myObj = obj_dict["{}.{}".format(cls.__name__, id)]
-            return myObj
-        except Exception:
-            return None
+        obj_search = cls.__name__ + "." + id
+
+        for obj in self.__objects.keys():
+            if obj == obj_search:
+                return self.__objects[obj]
+        return None
+        # try:
+        #     obj_dict = self.all(cls)
+        #     myObj = obj_dict["{}.{}".format(cls.__name__, id)]
+        #     return myObj
+        # except Exception:
+        #     return None
 
     def count(self, cls=None):
         """ count them objects """
