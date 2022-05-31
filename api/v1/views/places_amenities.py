@@ -45,7 +45,7 @@ def delete_amenity_to_a_place(place_id=None, amenity_id=None):
     else:
         if amenity_id not in my_place.amenity_ids:
             abort(404)
-        storage.delete(amenity_id)
+        storage.delete(my_amenity)
     storage.save()
     dict_empty
     return make_response(jsonify(dict_empty), 200)
