@@ -72,4 +72,4 @@ def amenity_post_to_a_place(place_id=None, amenity_id=None):
         else:
             my_place.amenity_ids.append(amenity_id)
     storage.save()
-    return make_response(jsonify(amenity.to_dict()), 201)
+    return make_response(jsonify(my_amenity.to_dict()), 201)
