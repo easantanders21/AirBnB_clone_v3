@@ -28,27 +28,25 @@ def all_amenities_of_a_place(place_id=None):
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
-                 methods=['DELETE'],
-                 strict_slashes=False)
-def delete_amenity_to_a_place(place_id=None, amenity_id=None):
-    """ status view function """
-    my_place = storage.get(Place, place_id)
-    if not my_place:
+                 methods=['DELETE'], strict_slashes=False)
+def delete_place_amenity(place_id, amenity_id):
+    """ Deletes a Amenity object of a Place """
+    place = storage.get(Place, place_id)
+    if not place:
         abort(404)
-    my_amenity = storage.get(Amenity, amenity_id)
-    if not my_amenity:
+    amenity = storage.get(Amenity, amenity_id)
+    if not amenity:
         abort(404)
     if environ.get('HBNB_TYPE_STORAGE') == "db":
-        if my_amenity not in my_place.amenities:
+        if amenity not in place.amenities:
             abort(404)
-        storage.delete(my_amenity)
+        place.amenities.remove(amenity)
     else:
-        if amenity_id not in my_place.amenity_ids:
+        if amenity_id not in place.amenity_ids:
             abort(404)
-        my_place.amenity_ids.remove(amenity_id)
+        place.amenity_ids.remove(amenity_id)
     storage.save()
-    dict_empty
-    return make_response(jsonify(dict_empty), 200)
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
