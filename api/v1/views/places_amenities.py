@@ -6,11 +6,8 @@ from models.place import Place
 from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
-from os import getenv
-from flask import jsonify, abort, make_response, request
-
-
-storage_t = getenv("HBNB_TYPE_STORAGE")
+from os import environ
+from flask import abort, jsonify, make_response, request
 
 
 @app_views.route('/places/<place_id>/amenities',
@@ -19,11 +16,9 @@ def all_amenities_of_a_place(place_id=None):
     """ status view function """
     amenities_list = []
     my_place = storage.get(Place, place_id)
-    print(storage_t)
-    print(my_place)
     if not my_place:
         abort(404)
-    if storage_t == 'db':
+    if environ.get('HBNB_TYPE_STORAGE') == "db":
         for amenity in my_place.amenities:
             amenities_list.append(amenity.to_dict())
     else:
@@ -43,7 +38,7 @@ def delete_amenity_to_a_place(place_id=None, amenity_id=None):
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
         abort(404)
-    if storage_t == 'db':
+    if environ.get('HBNB_TYPE_STORAGE') == "db":
         if my_amenity not in my_place.amenities:
             abort(404)
         storage.delete(my_amenity)
@@ -66,7 +61,7 @@ def amenity_post_to_a_place(place_id=None, amenity_id=None):
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
         abort(404)
-    if storage_t == 'db':
+    if environ.get('HBNB_TYPE_STORAGE') == "db":
         if my_amenity in my_place.amenities:
             return make_response(jsonify(my_amenity.to_dict()), 200)
         else:
