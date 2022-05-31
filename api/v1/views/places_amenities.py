@@ -33,7 +33,7 @@ def all_amenities_of_a_place(place_id=None):
 def delete_amenity_to_a_place(place_id=None, amenity_id=None):
     """ status view function """
     my_place = storage.get(Place, place_id)
-    if not place:
+    if not my_place:
         abort(404)
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
@@ -56,7 +56,7 @@ def delete_amenity_to_a_place(place_id=None, amenity_id=None):
 def amenity_post_to_a_place(place_id=None, amenity_id=None):
     """ status view function """
     my_place = storage.get(Place, place_id)
-    if not place:
+    if not my_place:
         abort(404)
     my_amenity = storage.get(Amenity, amenity_id)
     if not my_amenity:
