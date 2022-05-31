@@ -4,12 +4,10 @@ Review objects that handles all default RESTFul API actions:
 """
 from models.place import Place
 from models.amenity import Amenity
-from models.user import User
-from models.base_model import BaseModel
-from api.v1.views import app_views
 from models import storage
-from flask import jsonify, abort, make_response, request
+from api.v1.views import app_views
 from os import getenv
+from flask import jsonify, abort, make_response, request
 
 
 storage_t = getenv("HBNB_TYPE_STORAGE")
